@@ -1,7 +1,6 @@
 $gatewayIP = "8.8.8.8"  
 $maxMTU = 1500
 $minMTU  = 1200
-# Ejecuta un bucle para probar diferentes tamaños de MTU desde el maximo maxMTU al Minimo MinMTU
 while ($maxMTU -ge $minMTU) {
     $result = Test-Connection -ComputerName $gatewayIP -Count 1 -BufferSize $maxMTU -Quiet
 
