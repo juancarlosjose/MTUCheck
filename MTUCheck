@@ -1,23 +1,27 @@
-$gatewayIP = "8.8.8.8"  
+$URL = "Google.com" 
+$pingResults = Test-Connection -ComputerName $URL  -Count 5
+$latency = ($pingResults | Measure-Object ResponseTime -Average).Average
+$downloadSpeedMbps = 8 / ($latency / 1000)
+Write-Host "Latencia promedio: $latency ms"
+Write-Host "Velocidad estimada de descarga: $downloadSpeedMbps Mbps"
+$gatewayIP = "8.8.8.8" 
 $maxMTU = 1500
-$minMTU  = 1200
-while ($maxMTU -ge $minMTU) {
-    $result = Test-Connection -ComputerName $gatewayIP -Count 1 -BufferSize $maxMTU -Quiet
+ while ($maxMTU -ge 1400) {
+     $result = Test-Connection -ComputerName $gatewayIP -Count 1 -BufferSize $maxMTU -Quiet
 
-    if ($result) {
-        Write-Host "MTU de $maxMTU funciona correctamente."
-        break
-    }
-    else {
-        Write-Host "MTU de $maxMTU no funciona. Probando con un valor menor..."
-        $maxMTU--
-    }
-}
-Clear
+     if ($result) {
+         Write-Host "MTU de $maxMTU funciona correctamente."
+         break
+     }
+     else {
+         Write-Host "MTU de $maxMTU no funciona. Probando con un valor menor..."
+         $maxMTU--
+     }
+ }
 Write-Host "El mejor MTU para tu conexión de intranet es: $maxMTU"
 netsh interface ipv6 set subinterface "Wi-Fi" mtu=$maxMTU store=persistent
 netsh interface ipv4 set subinterface "Wi-Fi" mtu=$maxMTU store=persistent
-Write-Host "Asignacion de nuevo MTU Lista"
+Write-Host "Probando conexión a $maxMTU"
+Test-Connection -ComputerName $gatewayIP -Count 5 -BufferSize $maxMTU
 netsh interface ipv4 show subinterfaces
-
 
