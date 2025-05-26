@@ -55,5 +55,11 @@ Write-Host "Probando conexión a $maxMTU"
 Test-Connection -ComputerName $gatewayIP -Count 5 -BufferSize $maxMTU
 netsh interface ipv4 show subinterfaces
 # Listo Gracias por probar mi programa presiona (esc) para terminar
+Write-Host "Listo, Gracias por confiar en mi"
+
+
+
+
+
 
 
